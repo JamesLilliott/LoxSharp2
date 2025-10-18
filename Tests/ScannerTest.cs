@@ -15,79 +15,48 @@ public class Tests
     public void TestAnEmptyScriptReturnsEmptyTokensResult()
     {
         var result = _scanner.Scan("");
-        if (!result.Failed && result.Value.Count == 0)
-        {
-            Assert.Pass();
-        }
-        else
-        {
-            Assert.Fail();
-        }
+        
+        Assert.That(result.Failed, Is.False);
+        Assert.AreEqual(result.Value.Count, 0);
     }
 
     [Test]
     public void TestJunkInputReturnsFailedResult()
     {
         var result = _scanner.Scan("Frogs");
-        if (result.Failed)
-        {
-            Assert.Pass();
-        }
-        else
-        {
-            Assert.Fail();
-        }
+        Assert.That(result.Failed, Is.True);
+        Assert.AreEqual(result.Value.Count, 0);
     }
     
     [Test]
     public void TestLeftParenReturnsToken()
     {
         var result = _scanner.Scan("(");
-        if (!result.Failed && result.Value.Count == 1 && result.Value.First().Type == TokenType.LeftParen)
-        {
-            Assert.Pass();
-        }
-        else
-        {
-            Assert.Fail();
-        }
+        Assert.That(result.Failed, Is.False);
+        Assert.AreEqual(result.Value.First().Type, TokenType.LeftParen);
     }
     
     [Test]
-    public void TestRighParenReturnsToken()
+    public void TestRightParenReturnsToken()
     {
         var result = _scanner.Scan(")");
-        if (!result.Failed && result.Value.Count == 1 && result.Value.First().Type == TokenType.RightParen)
-        {
-            Assert.Pass();
-        }
-        else
-        {
-            Assert.Fail();
-        }
+        Assert.That(result.Failed, Is.False);
+        Assert.AreEqual(result.Value.First().Type, TokenType.RightParen);
     }
     
     [Test]
     public void TestAllTokensReturned()
     {
-        var result = _scanner.Scan("()");
-        if (result.Failed)
-        {
-            Assert.Fail();
-            return;
-        }
-
         var expectedTokens = new[] { new Token(TokenType.LeftParen), new Token(TokenType.RightParen) };
+        
+        var result = _scanner.Scan("()");
+        
+        Assert.That(result.Failed, Is.False);
+        Assert.AreEqual(expectedTokens.Length, result.Value.Count);
 
         for (int i = 0; i < expectedTokens.Length; i++)
         {
-            if (expectedTokens[i].Type != result.Value[i].Type)
-            {
-                Assert.Fail();
-                return;
-            }
+            Assert.AreEqual(expectedTokens[i].Type, result.Value[i].Type);
         }
-        
-        Assert.Pass();
     }
 }
