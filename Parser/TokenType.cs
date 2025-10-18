@@ -5,5 +5,12 @@ public enum TokenType
     LeftParen,
     RightParen,
     LeftBrace,
-    RightBrace
+    RightBrace,
+    Comma,
+    Period,
+    Minus,
+    Plus,
+    SemiColon,
+    Slash,
+    Asterisk,
 }

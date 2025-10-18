@@ -29,43 +29,43 @@ public class Tests
     }
     
     [Test]
-    public void TestLeftParenReturnsToken()
+    [TestCase("(", TokenType.LeftParen)]
+    [TestCase(")", TokenType.RightParen)]
+    [TestCase("{", TokenType.LeftBrace)]
+    [TestCase("}", TokenType.RightBrace)]
+    [TestCase(",", TokenType.Comma)]
+    [TestCase(".", TokenType.Period)]
+    [TestCase("-", TokenType.Minus)]
+    [TestCase("+", TokenType.Plus)]
+    [TestCase(";", TokenType.SemiColon)]
+    [TestCase("/", TokenType.Slash)]
+    [TestCase("*", TokenType.Asterisk)]
+    public void TestSingleCharacterTokenReturned(string input, TokenType output)
     {
-        var result = _scanner.Scan("(");
+        var result = _scanner.Scan(input);
         Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(result.Value.First().Type, TokenType.LeftParen);
-    }
-    
-    [Test]
-    public void TestRightParenReturnsToken()
-    {
-        var result = _scanner.Scan(")");
-        Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(result.Value.First().Type, TokenType.RightParen);
-    }
-    
-    [Test]
-    public void TestLeftBraceReturnsToken()
-    {
-        var result = _scanner.Scan("{");
-        Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(result.Value.First().Type, TokenType.LeftBrace);
-    }
-    
-    [Test]
-    public void TestRightBraceReturnsToken()
-    {
-        var result = _scanner.Scan("}");
-        Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(result.Value.First().Type, TokenType.RightBrace);
+        Assert.AreEqual(result.Value.First().Type, output);
     }
     
     [Test]
     public void TestAllTokensReturned()
     {
-        var expectedTokens = new[] { new Token(TokenType.LeftParen), new Token(TokenType.RightParen), new Token(TokenType.LeftBrace), new Token(TokenType.RightBrace) };
+        var expectedTokens = new[]
+        {
+            new Token(TokenType.LeftParen),
+            new Token(TokenType.RightParen),
+            new Token(TokenType.LeftBrace),
+            new Token(TokenType.RightBrace),
+            new Token(TokenType.Comma),
+            new Token(TokenType.Period),
+            new Token(TokenType.Minus),
+            new Token(TokenType.Plus),
+            new Token(TokenType.SemiColon),
+            new Token(TokenType.Slash),
+            new Token(TokenType.Asterisk),
+        };
         
-        var result = _scanner.Scan("(){}");
+        var result = _scanner.Scan("(){},.-+;/*");
         
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(expectedTokens.Length, result.Value.Count);

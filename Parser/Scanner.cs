@@ -36,6 +36,41 @@ public class Scanner
             {
                 _tokens.Add(new Token(TokenType.RightBrace));
             }
+            
+            if (_source[i] == ',')
+            {
+                _tokens.Add(new Token(TokenType.Comma));
+            }
+            
+            if (_source[i] == '.')
+            {
+                _tokens.Add(new Token(TokenType.Period));
+            }
+            
+            if (_source[i] == '-')
+            {
+                _tokens.Add(new Token(TokenType.Minus));
+            }
+            
+            if (_source[i] == '+')
+            {
+                _tokens.Add(new Token(TokenType.Plus));
+            }
+            
+            if (_source[i] == ';')
+            {
+                _tokens.Add(new Token(TokenType.SemiColon));
+            }
+            
+            if (_source[i] == '/')
+            {
+                _tokens.Add(new Token(TokenType.Slash));
+            }
+            
+            if (_source[i] == '*')
+            {
+                _tokens.Add(new Token(TokenType.Asterisk));
+            }
         }
         
         return new DataResult(_tokens.Count > 0, _tokens);
