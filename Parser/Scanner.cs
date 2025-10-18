@@ -148,9 +148,25 @@ public class Scanner
                         return new DataResult(false, _tokens);
                     }
                 }
-                // Is next char available or error
-                    // or end of string?
-                
+            }
+            
+            if (char.IsNumber(_source[i]))
+            {
+                var endOfNumberFound = false;
+                string parsedNumber = string.Empty;
+                while (!endOfNumberFound)
+                {
+                    if (_source.Length >= i + 2 && char.IsNumber(_source[i + 1]))
+                    {
+                        i++;
+                        parsedNumber += _source[i];
+                    }
+                    else
+                    {
+                        endOfNumberFound = true;
+                        _tokens.Add(new Token(TokenType.Number, parsedNumber));
+                    }
+                }
             }
         }
         

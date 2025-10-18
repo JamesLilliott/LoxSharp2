@@ -22,4 +22,5 @@ public enum TokenType
     Less,
     LessEqual,
     String,
+    Number,
 }
