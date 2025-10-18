@@ -52,4 +52,42 @@ public class Tests
             Assert.Fail();
         }
     }
+    
+    [Test]
+    public void TestRighParenReturnsToken()
+    {
+        var result = _scanner.Scan(")");
+        if (!result.Failed && result.Value.Count == 1 && result.Value.First().Type == TokenType.RightParen)
+        {
+            Assert.Pass();
+        }
+        else
+        {
+            Assert.Fail();
+        }
+    }
+    
+    [Test]
+    public void TestAllTokensReturned()
+    {
+        var result = _scanner.Scan("()");
+        if (result.Failed)
+        {
+            Assert.Fail();
+            return;
+        }
+
+        var expectedTokens = new[] { new Token(TokenType.LeftParen), new Token(TokenType.RightParen) };
+
+        for (int i = 0; i < expectedTokens.Length; i++)
+        {
+            if (expectedTokens[i].Type != result.Value[i].Type)
+            {
+                Assert.Fail();
+                return;
+            }
+        }
+        
+        Assert.Pass();
+    }
 }

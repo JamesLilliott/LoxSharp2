@@ -3,12 +3,12 @@
 public class DataResult
 {
     private bool _success;
-    private IReadOnlyCollection<Token> _tokens;
+    private List<Token> _tokens;
 
     public bool Failed => !_success;
-    public IReadOnlyCollection<Token> Value => _tokens;
+    public List<Token> Value => _tokens;
 
-    public DataResult(bool success, IReadOnlyCollection<Token> tokens)
+    public DataResult(bool success, List<Token> tokens)
     {
         _success = success;
         _tokens = tokens;

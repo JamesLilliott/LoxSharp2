@@ -2,5 +2,6 @@ namespace LoxParser;
 
 public enum TokenType
 {
-    LeftParen
+    LeftParen,
+    RightParen
 }
