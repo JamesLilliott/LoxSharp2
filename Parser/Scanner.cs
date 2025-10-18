@@ -71,6 +71,18 @@ public class Scanner
             {
                 _tokens.Add(new Token(TokenType.Asterisk));
             }
+            
+            if (_source[i] == '=')
+            {
+                if (_source.Length >= i + 2 && _source[i + 1] == '=')
+                {
+                    _tokens.Add(new Token(TokenType.EqualEqual));    
+                }
+                else
+                {
+                    _tokens.Add(new Token(TokenType.Equal));
+                }
+            }
         }
         
         return new DataResult(_tokens.Count > 0, _tokens);

@@ -13,4 +13,6 @@ public enum TokenType
     SemiColon,
     Slash,
     Asterisk,
+    Equal,
+    EqualEqual,
 }

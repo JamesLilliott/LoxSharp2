@@ -40,7 +40,9 @@ public class Tests
     [TestCase(";", TokenType.SemiColon)]
     [TestCase("/", TokenType.Slash)]
     [TestCase("*", TokenType.Asterisk)]
-    public void TestSingleCharacterTokenReturned(string input, TokenType output)
+    [TestCase("=", TokenType.Equal)]
+    [TestCase("==", TokenType.EqualEqual)]
+    public void TestTokenReturned(string input, TokenType output)
     {
         var result = _scanner.Scan(input);
         Assert.That(result.Failed, Is.False);
