@@ -76,6 +76,7 @@ public class Scanner
             {
                 if (_source.Length >= i + 2 && _source[i + 1] == '=')
                 {
+                    i++;
                     _tokens.Add(new Token(TokenType.EqualEqual));    
                 }
                 else
@@ -88,6 +89,7 @@ public class Scanner
             {
                 if (_source.Length >= i + 2 && _source[i + 1] == '=')
                 {
+                    i++;
                     _tokens.Add(new Token(TokenType.BangEqual));    
                 }
                 else
@@ -100,6 +102,7 @@ public class Scanner
             {
                 if (_source.Length >= i + 2 && _source[i + 1] == '=')
                 {
+                    i++;
                     _tokens.Add(new Token(TokenType.GreaterEqual));    
                 }
                 else
@@ -112,6 +115,7 @@ public class Scanner
             {
                 if (_source.Length >= i + 2 && _source[i + 1] == '=')
                 {
+                    i++;
                     _tokens.Add(new Token(TokenType.LessEqual));    
                 }
                 else

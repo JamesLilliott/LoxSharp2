@@ -71,9 +71,17 @@ public class Tests
             new Token(TokenType.SemiColon),
             new Token(TokenType.Slash),
             new Token(TokenType.Asterisk),
+            new Token(TokenType.EqualEqual),
+            new Token(TokenType.Equal),
+            new Token(TokenType.BangEqual),
+            new Token(TokenType.Bang),
+            new Token(TokenType.GreaterEqual),
+            new Token(TokenType.Greater),
+            new Token(TokenType.LessEqual),
+            new Token(TokenType.Less),
         };
         
-        var result = _scanner.Scan("(){},.-+;/*");
+        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<");
         
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(expectedTokens.Length, result.Value.Count);
