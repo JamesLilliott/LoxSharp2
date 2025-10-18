@@ -15,4 +15,10 @@ public enum TokenType
     Asterisk,
     Equal,
     EqualEqual,
+    Bang,
+    BangEqual,
+    Greater,
+    GreaterEqual,
+    Less,
+    LessEqual,
 }

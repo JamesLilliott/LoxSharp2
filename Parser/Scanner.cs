@@ -83,6 +83,42 @@ public class Scanner
                     _tokens.Add(new Token(TokenType.Equal));
                 }
             }
+            
+            if (_source[i] == '!')
+            {
+                if (_source.Length >= i + 2 && _source[i + 1] == '=')
+                {
+                    _tokens.Add(new Token(TokenType.BangEqual));    
+                }
+                else
+                {
+                    _tokens.Add(new Token(TokenType.Bang));
+                }
+            }
+            
+            if (_source[i] == '>')
+            {
+                if (_source.Length >= i + 2 && _source[i + 1] == '=')
+                {
+                    _tokens.Add(new Token(TokenType.GreaterEqual));    
+                }
+                else
+                {
+                    _tokens.Add(new Token(TokenType.Greater));
+                }
+            }
+            
+            if (_source[i] == '<')
+            {
+                if (_source.Length >= i + 2 && _source[i + 1] == '=')
+                {
+                    _tokens.Add(new Token(TokenType.LessEqual));    
+                }
+                else
+                {
+                    _tokens.Add(new Token(TokenType.Less));
+                }
+            }
         }
         
         return new DataResult(_tokens.Count > 0, _tokens);

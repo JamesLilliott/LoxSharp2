@@ -42,6 +42,12 @@ public class Tests
     [TestCase("*", TokenType.Asterisk)]
     [TestCase("=", TokenType.Equal)]
     [TestCase("==", TokenType.EqualEqual)]
+    [TestCase("!", TokenType.Bang)]
+    [TestCase("!=", TokenType.BangEqual)]
+    [TestCase(">", TokenType.Greater)]
+    [TestCase(">=", TokenType.GreaterEqual)]
+    [TestCase("<", TokenType.Less)]
+    [TestCase("<=", TokenType.LessEqual)]
     public void TestTokenReturned(string input, TokenType output)
     {
         var result = _scanner.Scan(input);
