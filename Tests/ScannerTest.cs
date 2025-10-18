@@ -48,11 +48,25 @@ public class Tests
     [TestCase(">=", TokenType.GreaterEqual)]
     [TestCase("<", TokenType.Less)]
     [TestCase("<=", TokenType.LessEqual)]
+    [TestCase("\"I am a string\"", TokenType.String)]
+    [TestCase("\"\"", TokenType.String)]
     public void TestTokenReturned(string input, TokenType output)
     {
         var result = _scanner.Scan(input);
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(result.Value.First().Type, output);
+    }
+    
+    [Test]
+    [TestCase("\"\"", TokenType.String)]
+    [TestCase("\"I\"", TokenType.String)]
+    [TestCase("\"I am a string\"", TokenType.String)]
+    public void TestStringTokenReturned(string input, TokenType output)
+    {
+        var result = _scanner.Scan(input);
+        Assert.That(result.Failed, Is.False);
+        Assert.AreEqual(result.Value.First().Type, output);
+        Assert.AreEqual(result.Value.First().Literal, input.Trim('\"'));
     }
     
     [Test]

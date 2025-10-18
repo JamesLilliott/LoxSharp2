@@ -123,6 +123,35 @@ public class Scanner
                     _tokens.Add(new Token(TokenType.Less));
                 }
             }
+            
+            if (_source[i] == '"')
+            {
+                var endOfStringFound = false;
+                string parsedString = string.Empty;
+                while (!endOfStringFound)
+                {
+                    if (_source.Length >= i + 2)
+                    {
+                        i++;
+                        if (_source[i] == '"')
+                        {
+                            endOfStringFound = true;
+                            _tokens.Add(new Token(TokenType.String, parsedString));
+                        }
+                        else
+                        {
+                            parsedString += _source[i];
+                        }
+                    }
+                    else
+                    {
+                        return new DataResult(false, _tokens);
+                    }
+                }
+                // Is next char available or error
+                    // or end of string?
+                
+            }
         }
         
         return new DataResult(_tokens.Count > 0, _tokens);
