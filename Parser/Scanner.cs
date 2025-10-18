@@ -26,6 +26,16 @@ public class Scanner
             {
                 _tokens.Add(new Token(TokenType.RightParen));
             }
+            
+            if (_source[i] == '{')
+            {
+                _tokens.Add(new Token(TokenType.LeftBrace));
+            }
+            
+            if (_source[i] == '}')
+            {
+                _tokens.Add(new Token(TokenType.RightBrace));
+            }
         }
         
         return new DataResult(_tokens.Count > 0, _tokens);

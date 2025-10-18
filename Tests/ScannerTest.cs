@@ -45,11 +45,27 @@ public class Tests
     }
     
     [Test]
+    public void TestLeftBraceReturnsToken()
+    {
+        var result = _scanner.Scan("{");
+        Assert.That(result.Failed, Is.False);
+        Assert.AreEqual(result.Value.First().Type, TokenType.LeftBrace);
+    }
+    
+    [Test]
+    public void TestRightBraceReturnsToken()
+    {
+        var result = _scanner.Scan("}");
+        Assert.That(result.Failed, Is.False);
+        Assert.AreEqual(result.Value.First().Type, TokenType.RightBrace);
+    }
+    
+    [Test]
     public void TestAllTokensReturned()
     {
-        var expectedTokens = new[] { new Token(TokenType.LeftParen), new Token(TokenType.RightParen) };
+        var expectedTokens = new[] { new Token(TokenType.LeftParen), new Token(TokenType.RightParen), new Token(TokenType.LeftBrace), new Token(TokenType.RightBrace) };
         
-        var result = _scanner.Scan("()");
+        var result = _scanner.Scan("(){}");
         
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(expectedTokens.Length, result.Value.Count);
