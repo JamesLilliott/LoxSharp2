@@ -38,5 +38,6 @@ public enum TokenType
     While,
     If,
     Or,
-    Return
+    Return,
+    Identifier
 }

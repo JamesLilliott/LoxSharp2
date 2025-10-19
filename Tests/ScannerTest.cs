@@ -19,10 +19,19 @@ public class Tests
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(result.Value.Count, 0);
     }
+    
+    [Test]
+    public void TestCharacterWithoutTokenReturnsFailedResult()
+    {
+        var result = _scanner.Scan("VAR ~~~~");
+        Assert.That(result.Failed, Is.True);
+        Assert.AreEqual(result.Value.Count, 0);
+    }
 
     [Test]
     public void TestJunkInputReturnsFailedResult()
     {
+        // TODO: Test should fail as `Frogs` is a valid identifier 
         var result = _scanner.Scan("Frogs");
         Assert.That(result.Failed, Is.True);
         Assert.AreEqual(result.Value.Count, 0);
@@ -51,22 +60,41 @@ public class Tests
     [TestCase("\"I am a string\"", TokenType.String)]
     [TestCase("\"\"", TokenType.String)]
     [TestCase("123", TokenType.Number)]
+    [TestCase("if", TokenType.If)]
     [TestCase("IF", TokenType.If)]
+    [TestCase("or", TokenType.Or)]
     [TestCase("OR", TokenType.Or)]
+    [TestCase("and", TokenType.And)]
     [TestCase("AND", TokenType.And)]
+    [TestCase("fun", TokenType.Fun)]
     [TestCase("FUN", TokenType.Fun)]
+    [TestCase("for", TokenType.For)]
     [TestCase("FOR", TokenType.For)]
+    [TestCase("nil", TokenType.Nil)]
     [TestCase("NIL", TokenType.Nil)]
+    [TestCase("var", TokenType.Var)]
     [TestCase("VAR", TokenType.Var)]
+    [TestCase("else", TokenType.Else)]
     [TestCase("ELSE", TokenType.Else)]
+    [TestCase("this", TokenType.This)]
     [TestCase("THIS", TokenType.This)]
+    [TestCase("true", TokenType.True)]
     [TestCase("TRUE", TokenType.True)]
+    [TestCase("class", TokenType.Class)]
     [TestCase("CLASS", TokenType.Class)]
+    [TestCase("false", TokenType.False)]
     [TestCase("FALSE", TokenType.False)]
+    [TestCase("print", TokenType.Print)]
     [TestCase("PRINT", TokenType.Print)]
+    [TestCase("super", TokenType.Super)]
     [TestCase("SUPER", TokenType.Super)]
+    [TestCase("while", TokenType.While)]
     [TestCase("WHILE", TokenType.While)]
+    [TestCase("return", TokenType.Return)]
     [TestCase("RETURN", TokenType.Return)]
+    [TestCase("USERNAME", TokenType.Identifier)]
+    [TestCase("userName", TokenType.Identifier)]
+    [TestCase("_user_name", TokenType.Identifier)]
     public void TestTokenReturned(string input, TokenType output)
     {
         var result = _scanner.Scan(input);
@@ -84,6 +112,27 @@ public class Tests
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(result.Value.First().Type, output);
         Assert.AreEqual(result.Value.First().Literal, expectedText);
+    }
+    
+    [Test]
+    public void TestVariableAssignment()
+    {
+        var input = "VAR catName = \"Monty\";";
+        var expectedTokens = new List<Token>
+        {
+            new Token(TokenType.Var),
+            new Token(TokenType.Identifier),
+            new Token(TokenType.Equal),
+            new Token(TokenType.String),
+            new Token(TokenType.SemiColon)
+        };
+        
+        var result = _scanner.Scan(input);
+        Assert.That(result.Failed, Is.False);
+        for (int i = 0; i < expectedTokens.Count; i++)
+        {
+            Assert.AreEqual(expectedTokens[i].Type, result.Value[i].Type);
+        }
     }
     
     [Test]
@@ -128,9 +177,10 @@ public class Tests
             new Token(TokenType.Super),
             new Token(TokenType.While),
             new Token(TokenType.Return),
+            new Token(TokenType.Identifier),
         };
         
-        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123IFORANDFUNFORNILVARELSETHISTRUECLASSFALSEPRINTSUPERWHILERETURN");
+        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123IFORANDFUNFORNILVARELSETHISTRUECLASSFALSEPRINTSUPERWHILERETURNuserName");
         
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(expectedTokens.Length, result.Value.Count);
