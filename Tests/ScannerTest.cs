@@ -12,12 +12,13 @@ public class Tests
     }
     
     [Test]
-    public void TestAnEmptyScriptReturnsEmptyTokensResult()
+    public void TestAnEmptyScriptReturnsEOFTokens()
     {
         var result = _scanner.Scan("");
         
         Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(result.Value.Count, 0);
+        Assert.AreEqual(result.Value.Count, 1);
+        Assert.AreEqual(TokenType.Eof, result.Value.First().Type);
     }
     
     [Test]
@@ -168,6 +169,7 @@ public class Tests
             new Token(TokenType.While),
             new Token(TokenType.Return),
             new Token(TokenType.Identifier),
+            new Token(TokenType.Eof),
         };
         
         var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123IF OR AND FUN FOR NIL VAR ELSE THIS TRUE CLASS FALSE PRINT SUPER WHILE RETURN userName");

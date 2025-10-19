@@ -12,160 +12,127 @@ public class Scanner
 
         if (string.IsNullOrEmpty(_source))
         {
+            _tokens.Add(new Token(TokenType.Eof));
             return new DataResult(true, _tokens);    
         }
 
         for (int i = 0; i < _source.Length; i++)
         {
-            if (_source[i] == '(')
+            switch (_source[i])
             {
-                _tokens.Add(new Token(TokenType.LeftParen));
-                continue;
-            }
-            
-            if (_source[i] == ')')
-            {
-                _tokens.Add(new Token(TokenType.RightParen));
-                continue;
-            }
-            
-            if (_source[i] == '{')
-            {
-                _tokens.Add(new Token(TokenType.LeftBrace));
-                continue;
-            }
-            
-            if (_source[i] == '}')
-            {
-                _tokens.Add(new Token(TokenType.RightBrace));
-                continue;
-            }
-            
-            if (_source[i] == ',')
-            {
-                _tokens.Add(new Token(TokenType.Comma));
-                continue;
-            }
-            
-            if (_source[i] == '.')
-            {
-                _tokens.Add(new Token(TokenType.Period));
-                continue;
-            }
-            
-            if (_source[i] == '-')
-            {
-                _tokens.Add(new Token(TokenType.Minus));
-                continue;
-            }
-            
-            if (_source[i] == '+')
-            {
-                _tokens.Add(new Token(TokenType.Plus));
-                continue;
-            }
-            
-            if (_source[i] == ';')
-            {
-                _tokens.Add(new Token(TokenType.SemiColon));
-                continue;
-            }
-            
-            if (_source[i] == '/')
-            {
-                _tokens.Add(new Token(TokenType.Slash));
-                continue;
-            }
-            
-            if (_source[i] == '*')
-            {
-                _tokens.Add(new Token(TokenType.Asterisk));
-                continue;
-            }
-            
-            if (_source[i] == '=')
-            {
-                if (_source.Length >= i + 2 && _source[i + 1] == '=')
+                case '(':
+                    _tokens.Add(new Token(TokenType.LeftParen));
+                    continue;
+                case ')':
+                    _tokens.Add(new Token(TokenType.RightParen));
+                    continue;
+                case '{':
+                    _tokens.Add(new Token(TokenType.LeftBrace));
+                    continue;
+                case '}':
+                    _tokens.Add(new Token(TokenType.RightBrace));
+                    continue;
+                case ',':
+                    _tokens.Add(new Token(TokenType.Comma));
+                    continue;
+                case '.':
+                    _tokens.Add(new Token(TokenType.Period));
+                    continue;
+                case '-':
+                    _tokens.Add(new Token(TokenType.Minus));
+                    continue;
+                case '+':
+                    _tokens.Add(new Token(TokenType.Plus));
+                    continue;
+                case ';':
+                    _tokens.Add(new Token(TokenType.SemiColon));
+                    continue;
+                case '/':
+                    _tokens.Add(new Token(TokenType.Slash));
+                    continue;
+                case '*':
+                    _tokens.Add(new Token(TokenType.Asterisk));
+                    continue;
+                case '=':
                 {
-                    i++;
-                    _tokens.Add(new Token(TokenType.EqualEqual));
-                }
-                else
-                {
-                    _tokens.Add(new Token(TokenType.Equal));
-                }
-                continue;
-            }
-            
-            if (_source[i] == '!')
-            {
-                if (_source.Length >= i + 2 && _source[i + 1] == '=')
-                {
-                    i++;
-                    _tokens.Add(new Token(TokenType.BangEqual));
-                }
-                else
-                {
-                    _tokens.Add(new Token(TokenType.Bang));
-                }
-                continue;
-            }
-            
-            if (_source[i] == '>')
-            {
-                if (_source.Length >= i + 2 && _source[i + 1] == '=')
-                {
-                    i++;
-                    _tokens.Add(new Token(TokenType.GreaterEqual));
-                }
-                else
-                {
-                    _tokens.Add(new Token(TokenType.Greater));
-                }
-                continue;
-            }
-            
-            if (_source[i] == '<')
-            {
-                if (_source.Length >= i + 2 && _source[i + 1] == '=')
-                {
-                    i++;
-                    _tokens.Add(new Token(TokenType.LessEqual));
-                }
-                else
-                {
-                    _tokens.Add(new Token(TokenType.Less));
-                }
-                continue;
-            }
-            
-            if (_source[i] == '"')
-            {
-                var endOfStringFound = false;
-                string parsedString = string.Empty;
-                while (!endOfStringFound)
-                {
-                    if (_source.Length >= i + 2)
+                    if (_source.Length >= i + 2 && _source[i + 1] == '=')
                     {
                         i++;
-                        if (_source[i] == '"')
-                        {
-                            endOfStringFound = true;
-                            _tokens.Add(new Token(TokenType.String, parsedString));
-                        }
-                        else
-                        {
-                            parsedString += _source[i];
-                        }
+                        _tokens.Add(new Token(TokenType.EqualEqual));
                     }
                     else
                     {
-                        return new DataResult(false, _tokens);
+                        _tokens.Add(new Token(TokenType.Equal));
                     }
+                    continue;
                 }
-                continue;
+                case '!':
+                {
+                    if (_source.Length >= i + 2 && _source[i + 1] == '=')
+                    {
+                        i++;
+                        _tokens.Add(new Token(TokenType.BangEqual));
+                    }
+                    else
+                    {
+                        _tokens.Add(new Token(TokenType.Bang));
+                    }
+                    continue;
+                }
+                case '>':
+                {
+                    if (_source.Length >= i + 2 && _source[i + 1] == '=')
+                    {
+                        i++;
+                        _tokens.Add(new Token(TokenType.GreaterEqual));
+                    }
+                    else
+                    {
+                        _tokens.Add(new Token(TokenType.Greater));
+                    }
+                    continue;
+                }
+                case '<':
+                {
+                    if (_source.Length >= i + 2 && _source[i + 1] == '=')
+                    {
+                        i++;
+                        _tokens.Add(new Token(TokenType.LessEqual));
+                    }
+                    else
+                    {
+                        _tokens.Add(new Token(TokenType.Less));
+                    }
+                    continue;
+                }
+                case '"':
+                {
+                    var endOfStringFound = false;
+                    string parsedString = string.Empty;
+                    while (!endOfStringFound)
+                    {
+                        if (_source.Length >= i + 2)
+                        {
+                            i++;
+                            if (_source[i] == '"')
+                            {
+                                endOfStringFound = true;
+                                _tokens.Add(new Token(TokenType.String, parsedString));
+                            }
+                            else
+                            {
+                                parsedString += _source[i];
+                            }
+                        }
+                        else
+                        {
+                            return new DataResult(false, _tokens);
+                        }
+                    }
+                    continue;
+                }
             }
-            
+
             if (char.IsNumber(_source[i]))
             {
                 var endOfNumberFound = false;
@@ -225,8 +192,9 @@ public class Scanner
             
             return new DataResult(false, _tokens);
         }
-        
-        return new DataResult(_tokens.Count > 0, _tokens);
+
+        _tokens.Add(new Token(TokenType.Eof));
+        return new DataResult(true, _tokens);
     }
 
     private bool IsAlpha(char c)

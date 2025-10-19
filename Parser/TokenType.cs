@@ -39,5 +39,6 @@ public enum TokenType
     If,
     Or,
     Return,
-    Identifier
+    Identifier,
+    Eof
 }
