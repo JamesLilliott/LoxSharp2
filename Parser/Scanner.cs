@@ -77,7 +77,7 @@ public class Scanner
                 if (_source.Length >= i + 2 && _source[i + 1] == '=')
                 {
                     i++;
-                    _tokens.Add(new Token(TokenType.EqualEqual));    
+                    _tokens.Add(new Token(TokenType.EqualEqual));
                 }
                 else
                 {
@@ -90,7 +90,7 @@ public class Scanner
                 if (_source.Length >= i + 2 && _source[i + 1] == '=')
                 {
                     i++;
-                    _tokens.Add(new Token(TokenType.BangEqual));    
+                    _tokens.Add(new Token(TokenType.BangEqual));
                 }
                 else
                 {
@@ -103,7 +103,7 @@ public class Scanner
                 if (_source.Length >= i + 2 && _source[i + 1] == '=')
                 {
                     i++;
-                    _tokens.Add(new Token(TokenType.GreaterEqual));    
+                    _tokens.Add(new Token(TokenType.GreaterEqual));
                 }
                 else
                 {
@@ -116,7 +116,7 @@ public class Scanner
                 if (_source.Length >= i + 2 && _source[i + 1] == '=')
                 {
                     i++;
-                    _tokens.Add(new Token(TokenType.LessEqual));    
+                    _tokens.Add(new Token(TokenType.LessEqual));
                 }
                 else
                 {
@@ -168,32 +168,91 @@ public class Scanner
                     }
                 }
             }
-            
-            var endIndex = i+3;
-            string[] threeLetterKeyWords = ["AND", "FUN", "FOR", "NIL", "VAR"];
-            if (_source.Length >= i + 3 && threeLetterKeyWords.Contains(_source[i..endIndex]))
+
+            string[] twoLetterKeyWords = ["IF", "OR"];
+            if (_source.Length >= i + 2 && twoLetterKeyWords.Contains(_source[i..(i+2)]))
             {
-                var check = _source[i..endIndex]; 
-                switch (check)
+                var check = _source[i..(i+2)];
+                _tokens.Add(check switch
                 {
-                    case "AND":
-                        _tokens.Add(new Token(TokenType.And));
-                        break;
-                    case "FUN":
-                        _tokens.Add(new Token(TokenType.Fun));
-                        break;
-                    case "FOR":
-                        _tokens.Add(new Token(TokenType.For));
-                        break;
-                    case "NIL":
-                        _tokens.Add(new Token(TokenType.Nil));
-                        break;
-                    case "VAR":
-                        _tokens.Add(new Token(TokenType.Var));
-                        break;
-                }
+                    "IF" => new Token(TokenType.If),
+                    "OR" => new Token(TokenType.Or),
+                    _ => throw new ArgumentException("Invalid case")
+                });
+                
+
+                i +=1;
+                continue;
+            }
+            
+            string[] threeLetterKeyWords = ["AND", "FUN", "FOR", "NIL", "VAR"];
+            if (_source.Length >= i + 3 && threeLetterKeyWords.Contains(_source[i..(i+3)]))
+            {
+                var check = _source[i..(i+3)];
+                _tokens.Add(check switch
+                {
+                    "AND" => new Token(TokenType.And),
+                    "FUN" => new Token(TokenType.Fun),
+                    "FOR" => new Token(TokenType.For),
+                    "VAR" => new Token(TokenType.Var),
+                    "NIL" => new Token(TokenType.Nil),
+                    _ => throw new ArgumentException("Invalid case")
+                });
+                
 
                 i +=2;
+                continue;
+            }
+
+            string[] fourLetterKeyWords = ["ELSE", "THIS", "TRUE"];
+            if (_source.Length >= i + 4 && fourLetterKeyWords.Contains(_source[i..(i + 4)]))
+            {
+                var check = _source[i..(i + 4)];
+                _tokens.Add(check switch
+                {
+                    "ELSE" => new Token(TokenType.Else),
+                    "THIS" => new Token(TokenType.This),
+                    "TRUE" => new Token(TokenType.True),
+                    _ => throw new ArgumentException("Invalid case")
+                });
+                
+
+                i +=3;
+                continue;
+            }
+            
+            string[] fiveLetterKeyWords = ["CLASS", "FALSE", "PRINT", "SUPER", "WHILE"];
+            if (_source.Length >= i + 5 && fiveLetterKeyWords.Contains(_source[i..(i + 5)]))
+            {
+                var check = _source[i..(i + 5)];
+                _tokens.Add(check switch
+                {
+                    "CLASS" => new Token(TokenType.Class),
+                    "FALSE" => new Token(TokenType.False),
+                    "PRINT" => new Token(TokenType.Print),
+                    "SUPER" => new Token(TokenType.Super),
+                    "WHILE" => new Token(TokenType.While),
+                    _ => throw new ArgumentException("Invalid case")
+                });
+                
+
+                i +=4;
+                continue;
+            }
+            
+            string[] sixLetterKeyWords = ["RETURN"];
+            if (_source.Length >= i + 6 && sixLetterKeyWords.Contains(_source[i..(i + 6)]))
+            {
+                var check = _source[i..(i + 6)];
+                _tokens.Add(check switch
+                {
+                    "RETURN" => new Token(TokenType.Return),
+                    _ => throw new ArgumentException("Invalid case")
+                });
+                
+
+                i +=5;
+                continue;
             }
         }
         

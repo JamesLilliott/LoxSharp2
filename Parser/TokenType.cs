@@ -27,5 +27,16 @@ public enum TokenType
     Fun,
     For,
     Nil,
-    Var
+    Var,
+    Else,
+    This,
+    True,
+    Class,
+    False,
+    Print,
+    Super,
+    While,
+    If,
+    Or,
+    Return
 }

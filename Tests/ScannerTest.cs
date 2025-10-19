@@ -51,11 +51,22 @@ public class Tests
     [TestCase("\"I am a string\"", TokenType.String)]
     [TestCase("\"\"", TokenType.String)]
     [TestCase("123", TokenType.Number)]
+    [TestCase("IF", TokenType.If)]
+    [TestCase("OR", TokenType.Or)]
     [TestCase("AND", TokenType.And)]
     [TestCase("FUN", TokenType.Fun)]
     [TestCase("FOR", TokenType.For)]
     [TestCase("NIL", TokenType.Nil)]
     [TestCase("VAR", TokenType.Var)]
+    [TestCase("ELSE", TokenType.Else)]
+    [TestCase("THIS", TokenType.This)]
+    [TestCase("TRUE", TokenType.True)]
+    [TestCase("CLASS", TokenType.Class)]
+    [TestCase("FALSE", TokenType.False)]
+    [TestCase("PRINT", TokenType.Print)]
+    [TestCase("SUPER", TokenType.Super)]
+    [TestCase("WHILE", TokenType.While)]
+    [TestCase("RETURN", TokenType.Return)]
     public void TestTokenReturned(string input, TokenType output)
     {
         var result = _scanner.Scan(input);
@@ -101,14 +112,25 @@ public class Tests
             new Token(TokenType.Less),
             new Token(TokenType.String),
             new Token(TokenType.Number),
+            new Token(TokenType.If),
+            new Token(TokenType.Or),
             new Token(TokenType.And),
             new Token(TokenType.Fun),
             new Token(TokenType.For),
             new Token(TokenType.Nil),
             new Token(TokenType.Var),
+            new Token(TokenType.Else),
+            new Token(TokenType.This),
+            new Token(TokenType.True),
+            new Token(TokenType.Class),
+            new Token(TokenType.False),
+            new Token(TokenType.Print),
+            new Token(TokenType.Super),
+            new Token(TokenType.While),
+            new Token(TokenType.Return),
         };
         
-        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123ANDFUNFORNILVAR");
+        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123IFORANDFUNFORNILVARELSETHISTRUECLASSFALSEPRINTSUPERWHILERETURN");
         
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(expectedTokens.Length, result.Value.Count);
