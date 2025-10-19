@@ -51,6 +51,11 @@ public class Tests
     [TestCase("\"I am a string\"", TokenType.String)]
     [TestCase("\"\"", TokenType.String)]
     [TestCase("123", TokenType.Number)]
+    [TestCase("AND", TokenType.And)]
+    [TestCase("FUN", TokenType.Fun)]
+    [TestCase("FOR", TokenType.For)]
+    [TestCase("NIL", TokenType.Nil)]
+    [TestCase("VAR", TokenType.Var)]
     public void TestTokenReturned(string input, TokenType output)
     {
         var result = _scanner.Scan(input);
@@ -94,9 +99,16 @@ public class Tests
             new Token(TokenType.Greater),
             new Token(TokenType.LessEqual),
             new Token(TokenType.Less),
+            new Token(TokenType.String),
+            new Token(TokenType.Number),
+            new Token(TokenType.And),
+            new Token(TokenType.Fun),
+            new Token(TokenType.For),
+            new Token(TokenType.Nil),
+            new Token(TokenType.Var),
         };
         
-        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<");
+        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123ANDFUNFORNILVAR");
         
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(expectedTokens.Length, result.Value.Count);

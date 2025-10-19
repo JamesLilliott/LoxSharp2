@@ -168,6 +168,33 @@ public class Scanner
                     }
                 }
             }
+            
+            var endIndex = i+3;
+            string[] threeLetterKeyWords = ["AND", "FUN", "FOR", "NIL", "VAR"];
+            if (_source.Length >= i + 3 && threeLetterKeyWords.Contains(_source[i..endIndex]))
+            {
+                var check = _source[i..endIndex]; 
+                switch (check)
+                {
+                    case "AND":
+                        _tokens.Add(new Token(TokenType.And));
+                        break;
+                    case "FUN":
+                        _tokens.Add(new Token(TokenType.Fun));
+                        break;
+                    case "FOR":
+                        _tokens.Add(new Token(TokenType.For));
+                        break;
+                    case "NIL":
+                        _tokens.Add(new Token(TokenType.Nil));
+                        break;
+                    case "VAR":
+                        _tokens.Add(new Token(TokenType.Var));
+                        break;
+                }
+
+                i +=2;
+            }
         }
         
         return new DataResult(_tokens.Count > 0, _tokens);

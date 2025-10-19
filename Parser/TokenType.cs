@@ -23,4 +23,9 @@ public enum TokenType
     LessEqual,
     String,
     Number,
+    And,
+    Fun,
+    For,
+    Nil,
+    Var
 }
