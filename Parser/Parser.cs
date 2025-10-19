@@ -4,20 +4,54 @@ namespace LoxParser;
 
 public class Parser
 {
-    private IReadOnlyCollection<Token> _tokens;
+    private List<Token> _tokens;
+    private int _index;
 
-    public LiteralExpressions Parse(IReadOnlyCollection<Token> tokens)
+    public Expression Parse(List<Token> tokens)
     {
         _tokens = tokens;
+        _index = 0;
 
-        return tokens.First().Type switch
+        if (tokens.Count == 1)
         {
-            TokenType.False => new LiteralExpressions(false),
-            TokenType.True => new LiteralExpressions(true),
-            TokenType.Nil => new LiteralExpressions(null),
-            TokenType.String => new LiteralExpressions(tokens.First().Literal),
-            TokenType.Number => new LiteralExpressions(tokens.First().Literal),
+            return Primary();
+        }
+        else
+        {
+            return Unary();
+        }
+
+        throw new Exception("Unsupported input");
+    }
+
+    private Expression Unary()
+    {
+        var token = _tokens[_index]; 
+        if (token.Type == TokenType.Minus || token.Type == TokenType.Bang)
+        {
+            return new UnaryExpression(Consume(token).Type, Unary());
+        }
+
+        return Primary();
+    }
+
+    private LiteralExpression Primary()
+    {
+        var token = Consume(_tokens[_index]);
+        return token.Type switch
+        {
+            TokenType.False => new LiteralExpression(false),
+            TokenType.True => new LiteralExpression(true),
+            TokenType.Nil => new LiteralExpression(null),
+            TokenType.String => new LiteralExpression(token.Literal),
+            TokenType.Number => new LiteralExpression(token.Literal),
             _ => throw new Exception("Expected literal expression")
         };
+    }
+
+    private Token Consume(Token token)
+    {
+        _index++;
+        return token;
     }
 }
