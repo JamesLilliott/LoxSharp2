@@ -25,16 +25,6 @@ public class Tests
     {
         var result = _scanner.Scan("VAR ~~~~");
         Assert.That(result.Failed, Is.True);
-        Assert.AreEqual(result.Value.Count, 0);
-    }
-
-    [Test]
-    public void TestJunkInputReturnsFailedResult()
-    {
-        // TODO: Test should fail as `Frogs` is a valid identifier 
-        var result = _scanner.Scan("Frogs");
-        Assert.That(result.Failed, Is.True);
-        Assert.AreEqual(result.Value.Count, 0);
     }
     
     [Test]
@@ -180,7 +170,7 @@ public class Tests
             new Token(TokenType.Identifier),
         };
         
-        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123IFORANDFUNFORNILVARELSETHISTRUECLASSFALSEPRINTSUPERWHILERETURNuserName");
+        var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123IF OR AND FUN FOR NIL VAR ELSE THIS TRUE CLASS FALSE PRINT SUPER WHILE RETURN userName");
         
         Assert.That(result.Failed, Is.False);
         Assert.AreEqual(expectedTokens.Length, result.Value.Count);

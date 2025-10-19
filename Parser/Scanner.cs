@@ -20,56 +20,67 @@ public class Scanner
             if (_source[i] == '(')
             {
                 _tokens.Add(new Token(TokenType.LeftParen));
+                continue;
             }
             
             if (_source[i] == ')')
             {
                 _tokens.Add(new Token(TokenType.RightParen));
+                continue;
             }
             
             if (_source[i] == '{')
             {
                 _tokens.Add(new Token(TokenType.LeftBrace));
+                continue;
             }
             
             if (_source[i] == '}')
             {
                 _tokens.Add(new Token(TokenType.RightBrace));
+                continue;
             }
             
             if (_source[i] == ',')
             {
                 _tokens.Add(new Token(TokenType.Comma));
+                continue;
             }
             
             if (_source[i] == '.')
             {
                 _tokens.Add(new Token(TokenType.Period));
+                continue;
             }
             
             if (_source[i] == '-')
             {
                 _tokens.Add(new Token(TokenType.Minus));
+                continue;
             }
             
             if (_source[i] == '+')
             {
                 _tokens.Add(new Token(TokenType.Plus));
+                continue;
             }
             
             if (_source[i] == ';')
             {
                 _tokens.Add(new Token(TokenType.SemiColon));
+                continue;
             }
             
             if (_source[i] == '/')
             {
                 _tokens.Add(new Token(TokenType.Slash));
+                continue;
             }
             
             if (_source[i] == '*')
             {
                 _tokens.Add(new Token(TokenType.Asterisk));
+                continue;
             }
             
             if (_source[i] == '=')
@@ -83,6 +94,7 @@ public class Scanner
                 {
                     _tokens.Add(new Token(TokenType.Equal));
                 }
+                continue;
             }
             
             if (_source[i] == '!')
@@ -96,6 +108,7 @@ public class Scanner
                 {
                     _tokens.Add(new Token(TokenType.Bang));
                 }
+                continue;
             }
             
             if (_source[i] == '>')
@@ -109,6 +122,7 @@ public class Scanner
                 {
                     _tokens.Add(new Token(TokenType.Greater));
                 }
+                continue;
             }
             
             if (_source[i] == '<')
@@ -122,6 +136,7 @@ public class Scanner
                 {
                     _tokens.Add(new Token(TokenType.Less));
                 }
+                continue;
             }
             
             if (_source[i] == '"')
@@ -148,6 +163,7 @@ public class Scanner
                         return new DataResult(false, _tokens);
                     }
                 }
+                continue;
             }
             
             if (char.IsNumber(_source[i]))
@@ -167,95 +183,61 @@ public class Scanner
                         _tokens.Add(new Token(TokenType.Number, parsedNumber));
                     }
                 }
-            }
-
-            string[] twoLetterKeyWords = ["IF", "OR"];
-            if (_source.Length >= i + 2 && twoLetterKeyWords.Contains(_source[i..(i+2)]))
-            {
-                var check = _source[i..(i+2)];
-                _tokens.Add(check switch
-                {
-                    "IF" => new Token(TokenType.If),
-                    "OR" => new Token(TokenType.Or),
-                    _ => throw new ArgumentException("Invalid case")
-                });
-                
-
-                i +=1;
                 continue;
             }
             
-            string[] threeLetterKeyWords = ["AND", "FUN", "FOR", "NIL", "VAR"];
-            if (_source.Length >= i + 3 && threeLetterKeyWords.Contains(_source[i..(i+3)]))
+            if (IsAlpha(_source[i]))
             {
-                var check = _source[i..(i+3)];
-                _tokens.Add(check switch
-                {
-                    "AND" => new Token(TokenType.And),
-                    "FUN" => new Token(TokenType.Fun),
-                    "FOR" => new Token(TokenType.For),
-                    "VAR" => new Token(TokenType.Var),
-                    "NIL" => new Token(TokenType.Nil),
-                    _ => throw new ArgumentException("Invalid case")
-                });
-                
+                var keyWords = Keywords.GetKeywords();
+                var endOfWord = false;
+                var parsedWord = _source[i].ToString();
 
-                i +=2;
+                while (!endOfWord)
+                {
+                    i++;
+                    if (i < _source.Length && (IsAlpha(_source[i]) || IsDigit(_source[i])))
+                    {
+                        parsedWord += _source[i].ToString();
+                    }
+                    else
+                    {
+                        endOfWord = true;
+                    }
+                }
+
+                parsedWord = parsedWord.ToUpper();
+                if (keyWords.TryGetValue(parsedWord, out var tokenType))
+                {
+                    _tokens.Add(new Token(tokenType));
+                }
+                else
+                {
+                    _tokens.Add(new Token(TokenType.Identifier, parsedWord));
+                }
+
                 continue;
             }
 
-            string[] fourLetterKeyWords = ["ELSE", "THIS", "TRUE"];
-            if (_source.Length >= i + 4 && fourLetterKeyWords.Contains(_source[i..(i + 4)]))
+            if (char.IsWhiteSpace(_source[i]))
             {
-                var check = _source[i..(i + 4)];
-                _tokens.Add(check switch
-                {
-                    "ELSE" => new Token(TokenType.Else),
-                    "THIS" => new Token(TokenType.This),
-                    "TRUE" => new Token(TokenType.True),
-                    _ => throw new ArgumentException("Invalid case")
-                });
-                
-
-                i +=3;
-                continue;
-            }
-            
-            string[] fiveLetterKeyWords = ["CLASS", "FALSE", "PRINT", "SUPER", "WHILE"];
-            if (_source.Length >= i + 5 && fiveLetterKeyWords.Contains(_source[i..(i + 5)]))
-            {
-                var check = _source[i..(i + 5)];
-                _tokens.Add(check switch
-                {
-                    "CLASS" => new Token(TokenType.Class),
-                    "FALSE" => new Token(TokenType.False),
-                    "PRINT" => new Token(TokenType.Print),
-                    "SUPER" => new Token(TokenType.Super),
-                    "WHILE" => new Token(TokenType.While),
-                    _ => throw new ArgumentException("Invalid case")
-                });
-                
-
-                i +=4;
                 continue;
             }
             
-            string[] sixLetterKeyWords = ["RETURN"];
-            if (_source.Length >= i + 6 && sixLetterKeyWords.Contains(_source[i..(i + 6)]))
-            {
-                var check = _source[i..(i + 6)];
-                _tokens.Add(check switch
-                {
-                    "RETURN" => new Token(TokenType.Return),
-                    _ => throw new ArgumentException("Invalid case")
-                });
-                
-
-                i +=5;
-                continue;
-            }
+            return new DataResult(false, _tokens);
         }
         
         return new DataResult(_tokens.Count > 0, _tokens);
+    }
+
+    private bool IsAlpha(char c)
+    {
+        return (c >= 'a' && c <= 'z') ||
+               (c >= 'A' && c <= 'Z') ||
+               c == '_';
+    }
+    
+    private bool IsDigit(char c)
+    {
+        return c >= '0' && c <= '9';
     }
 }
