@@ -5,32 +5,40 @@ namespace LoxParser;
 public class Parser
 {
     private List<Token> _tokens;
-    private int _index;
+    private int _index = 0;
 
-    public Expression Parse(List<Token> tokens)
+    public Parser(List<Token> tokens)
     {
         _tokens = tokens;
-        _index = 0;
-
-        if (tokens.Count == 3)
-        {
-            return Factor();
-        }
-        else if (tokens.Count == 1)
-        {
-            return Primary();
-        }
-        else
-        {
-            return Unary();
-        }
-
-        throw new Exception("Unsupported input");
     }
 
-    private Expression Factor()
+    public Expression Term()
+    {
+        var expression = Factor();
+        if (_tokens.Count < _index + 1)
+        {
+            return expression;
+        }
+
+        var token = _tokens[_index];
+        if (token.Type == TokenType.Plus || token.Type == TokenType.Minus)
+        {
+            var @operator = Consume(token).Type;
+            var rightExpression = Factor();
+            expression = new BinaryExpression(expression, @operator, rightExpression);
+        }
+        
+        return expression;
+    }
+
+    public Expression Factor()
     {
         var expression = Unary();
+        if (_tokens.Count < _index + 1)
+        {
+            return expression;
+        }
+
         var token = _tokens[_index];
         if (token.Type == TokenType.Asterisk || token.Type == TokenType.Slash)
         {
@@ -42,7 +50,7 @@ public class Parser
         return expression;
     }
 
-    private Expression Unary()
+    public Expression Unary()
     {
         var token = _tokens[_index]; 
         if (token.Type == TokenType.Minus || token.Type == TokenType.Bang)
@@ -53,7 +61,7 @@ public class Parser
         return Primary();
     }
 
-    private LiteralExpression Primary()
+    public LiteralExpression Primary()
     {
         var token = Consume(_tokens[_index]);
         return token.Type switch
