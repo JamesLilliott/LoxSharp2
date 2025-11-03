@@ -88,4 +88,88 @@ public class ParserTest
         var expectedExpression = expectedOutput.Expression as LiteralExpression;
         Assert.AreEqual(actualExpression.Literal, expectedExpression.Literal);
     }
+    
+    [Test]
+    public void TestParserReturnsMultiplyFactor()
+    {
+        var input = new List<Token> { new Token(TokenType.Number, 3), new Token(TokenType.Asterisk), new Token(TokenType.Number, 2) };
+        var leftUnary = new LiteralExpression(3);
+        var comparison = TokenType.Asterisk;
+        var rightUnary = new LiteralExpression(2);
+        var expectedOutput = new BinaryExpression(leftUnary, comparison, rightUnary);
+        
+        var result = _parser.Parse(input) as BinaryExpression;
+        Assert.AreEqual(result.Operator, expectedOutput.Operator);
+        
+        var actualLeftExpression = result.LeftExpression as LiteralExpression;
+        var expectedLeftExpression = expectedOutput.LeftExpression as LiteralExpression;
+        Assert.AreEqual(actualLeftExpression.Literal, expectedLeftExpression.Literal);
+        
+        var actualRightExpression = result.RightExpression as LiteralExpression;
+        var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
+        Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
+    }
+    
+    [Test]
+    public void TestParserReturnsDivisionFactor()
+    {
+        var input = new List<Token> { new Token(TokenType.Number, 6), new Token(TokenType.Slash), new Token(TokenType.Number, 2) };
+        var leftUnary = new LiteralExpression(6);
+        var comparison = TokenType.Slash;
+        var rightUnary = new LiteralExpression(2);
+        var expectedOutput = new BinaryExpression(leftUnary, comparison, rightUnary);
+        
+        var result = _parser.Parse(input) as BinaryExpression;
+        Assert.AreEqual(result.Operator, expectedOutput.Operator);
+        
+        var actualLeftExpression = result.LeftExpression as LiteralExpression;
+        var expectedLeftExpression = expectedOutput.LeftExpression as LiteralExpression;
+        Assert.AreEqual(actualLeftExpression.Literal, expectedLeftExpression.Literal);
+        
+        var actualRightExpression = result.RightExpression as LiteralExpression;
+        var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
+        Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
+    }
+    
+    [Test]
+    public void TestParserReturnsAdditionTerm()
+    {
+        var input = new List<Token> { new Token(TokenType.Number, 5), new Token(TokenType.Plus), new Token(TokenType.Number, 4) };
+        var leftUnary = new LiteralExpression(5);
+        var comparison = TokenType.Plus;
+        var rightUnary = new LiteralExpression(4);
+        var expectedOutput = new BinaryExpression(leftUnary, comparison, rightUnary);
+        
+        var result = _parser.Parse(input) as BinaryExpression;
+        Assert.AreEqual(result.Operator, expectedOutput.Operator);
+        
+        var actualLeftExpression = result.LeftExpression as LiteralExpression;
+        var expectedLeftExpression = expectedOutput.LeftExpression as LiteralExpression;
+        Assert.AreEqual(actualLeftExpression.Literal, expectedLeftExpression.Literal);
+        
+        var actualRightExpression = result.RightExpression as LiteralExpression;
+        var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
+        Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
+    }
+    
+    [Test]
+    public void TestParserReturnsSubtractionTerm()
+    {
+        var input = new List<Token> { new Token(TokenType.Number, 10), new Token(TokenType.Minus), new Token(TokenType.Number, 5) };
+        var leftUnary = new LiteralExpression(10);
+        var comparison = TokenType.Minus;
+        var rightUnary = new LiteralExpression(5);
+        var expectedOutput = new BinaryExpression(leftUnary, comparison, rightUnary);
+        
+        var result = _parser.Parse(input) as BinaryExpression;
+        Assert.AreEqual(result.Operator, expectedOutput.Operator);
+        
+        var actualLeftExpression = result.LeftExpression as LiteralExpression;
+        var expectedLeftExpression = expectedOutput.LeftExpression as LiteralExpression;
+        Assert.AreEqual(actualLeftExpression.Literal, expectedLeftExpression.Literal);
+        
+        var actualRightExpression = result.RightExpression as LiteralExpression;
+        var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
+        Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
+    }
 }

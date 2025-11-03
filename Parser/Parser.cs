@@ -12,7 +12,11 @@ public class Parser
         _tokens = tokens;
         _index = 0;
 
-        if (tokens.Count == 1)
+        if (tokens.Count == 3)
+        {
+            return Factor();
+        }
+        else if (tokens.Count == 1)
         {
             return Primary();
         }
@@ -22,6 +26,20 @@ public class Parser
         }
 
         throw new Exception("Unsupported input");
+    }
+
+    private Expression Factor()
+    {
+        var expression = Unary();
+        var token = _tokens[_index];
+        if (token.Type == TokenType.Asterisk || token.Type == TokenType.Slash)
+        {
+            var @operator = Consume(token).Type;
+            var rightExpression = Unary();
+            expression = new BinaryExpression(expression, @operator, rightExpression);
+        }
+        
+        return expression;
     }
 
     private Expression Unary()
