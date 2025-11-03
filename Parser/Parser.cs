@@ -11,7 +11,27 @@ public class Parser
     {
         _tokens = tokens;
     }
+    
+    public Expression Comparison()
+    {
+        var expression = Term();
+        if (_tokens.Count < _index + 1)
+        {
+            return expression;
+        }
 
+        var token = _tokens[_index];
+        TokenType[] validTokenTypes = [TokenType.Greater, TokenType.GreaterEqual, TokenType.Less, TokenType.LessEqual]; 
+        if (validTokenTypes.Contains(token.Type))
+        {
+            var @operator = Consume(token).Type;
+            var rightExpression = Term();
+            expression = new BinaryExpression(expression, @operator, rightExpression);
+        }
+        
+        return expression;
+    }
+    
     public Expression Term()
     {
         var expression = Factor();
