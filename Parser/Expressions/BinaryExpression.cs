@@ -1,14 +1,14 @@
 namespace LoxParser.Expressions;
 
-public class BinaryExpression : Expression
+public class BinaryExpression : IExpression
 {
-    public Expression LeftExpression { get; }
+    public IExpression LeftExpression { get; }
     
     public TokenType Operator { get; } // TODO: Can this be made into a smaller enum??
     
-    public Expression RightExpression { get; }
+    public IExpression RightExpression { get; }
 
-    public BinaryExpression(Expression leftExpression, TokenType @operator, Expression rightExpression)
+    public BinaryExpression(IExpression leftExpression, TokenType @operator, IExpression rightExpression)
     {
         LeftExpression = leftExpression;
         Operator = @operator;

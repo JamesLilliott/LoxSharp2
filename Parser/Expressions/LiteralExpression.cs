@@ -1,6 +1,6 @@
 namespace LoxParser.Expressions;
 
-public class LiteralExpression : Expression
+public class LiteralExpression : IExpression
 {
     public object Literal { get; }
 

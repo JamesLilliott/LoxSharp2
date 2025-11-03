@@ -61,6 +61,21 @@ public class ParserTest
     }
     
     [Test]
+    public void TestParserReturnsGrouping()
+    {
+        var input = new List<Token> { new Token(TokenType.LeftParen), new Token(TokenType.Number, 567), new Token(TokenType.RightParen) };
+        
+        var expectedOutput = new GroupingExpression(new LiteralExpression(567));
+        
+        var parser = new Parser(input);
+        var result = parser.Primary() as GroupingExpression;
+        
+        var actualExpression = result.Expression as LiteralExpression;
+        var expectedExpression = expectedOutput.Expression as LiteralExpression;
+        Assert.AreEqual(actualExpression.Literal, expectedExpression.Literal);
+    }
+    
+    [Test]
     public void TestParserReturnsBangUnary()
     {
         var input = new List<Token> { new Token(TokenType.Bang), new Token(TokenType.True) };
@@ -221,4 +236,6 @@ public class ParserTest
         var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
         Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
     }
+    
+    // TODO: Add a set of tokens together and expect a tree of expressions
 }

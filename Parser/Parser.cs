@@ -11,8 +11,13 @@ public class Parser
     {
         _tokens = tokens;
     }
-    
-    public Expression Equality()
+
+    public IExpression Expression()
+    {
+        return Equality();
+    }
+
+    public IExpression Equality()
     {
         var expression = Comparison();
         if (_tokens.Count < _index + 1)
@@ -31,7 +36,7 @@ public class Parser
         return expression;    
     }
 
-    public Expression Comparison()
+    public IExpression Comparison()
     {
         var expression = Term();
         if (_tokens.Count < _index + 1)
@@ -51,7 +56,7 @@ public class Parser
         return expression;
     }
 
-    public Expression Term()
+    public IExpression Term()
     {
         var expression = Factor();
         if (_tokens.Count < _index + 1)
@@ -70,7 +75,7 @@ public class Parser
         return expression;
     }
 
-    public Expression Factor()
+    public IExpression Factor()
     {
         var expression = Unary();
         if (_tokens.Count < _index + 1)
@@ -89,7 +94,7 @@ public class Parser
         return expression;
     }
 
-    public Expression Unary()
+    public IExpression Unary()
     {
         var token = _tokens[_index]; 
         if (token.Type == TokenType.Minus || token.Type == TokenType.Bang)
@@ -100,9 +105,22 @@ public class Parser
         return Primary();
     }
 
-    public LiteralExpression Primary()
+    public IExpression Primary()
     {
         var token = Consume(_tokens[_index]);
+
+        if (token.Type == TokenType.LeftParen)
+        {
+            var expression = Expression();
+            if (_tokens.Count < _index + 1)
+            {
+                throw new Exception("Missing ')'");
+            }
+
+            _index++;
+            return new GroupingExpression(expression);
+        }
+        
         return token.Type switch
         {
             TokenType.False => new LiteralExpression(false),

@@ -1,11 +1,11 @@
 namespace LoxParser.Expressions;
 
-public class UnaryExpression :  Expression
+public class UnaryExpression :  IExpression
 {
     public TokenType Operator { get; } // TODO: Can this be made into a smaller enum??
-    public Expression Expression { get; }
+    public IExpression Expression { get; }
 
-    public UnaryExpression(TokenType @operator, Expression expression)
+    public UnaryExpression(TokenType @operator, IExpression expression)
     {
         Operator = @operator;
         Expression = expression;

@@ -1,6 +1,6 @@
 namespace LoxParser.Expressions;
 
-public abstract class Expression
+public interface IExpression
 {
     
 }
