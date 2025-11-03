@@ -5,11 +5,22 @@ namespace LoxParser;
 public class Parser
 {
     private List<Token> _tokens;
-    private int _index = 0;
+    private int _index;
+
+    public Parser()
+    {
+    }
 
     public Parser(List<Token> tokens)
     {
         _tokens = tokens;
+    }
+
+    public IExpression Parse(List<Token> tokens)
+    {
+        _tokens = tokens;
+
+        return Expression();
     }
 
     public IExpression Expression()
@@ -26,7 +37,7 @@ public class Parser
         }
 
         var token = _tokens[_index];
-        if (token.Type == TokenType.Equal || token.Type == TokenType.BangEqual)
+        if (token.Type == TokenType.EqualEqual || token.Type == TokenType.BangEqual)
         {
             var @operator = Consume(token).Type;
             var rightExpression = Comparison();
