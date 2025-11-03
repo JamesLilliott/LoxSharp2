@@ -199,4 +199,26 @@ public class ParserTest
         var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
         Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
     }
+
+    [TestCase(10, TokenType.BangEqual,11)]
+    [TestCase(11, TokenType.Equal,11)]
+    [Test]
+    public void TestParserReturnsEquality(int leftNumber, TokenType @operator, int rightNumber)
+    {
+        var input = new List<Token> { new Token(TokenType.Number, leftNumber), new Token(@operator), new Token(TokenType.Number, rightNumber) };
+        var expectedOutput = new BinaryExpression(new LiteralExpression(leftNumber), @operator, new LiteralExpression(rightNumber));
+        
+        var parser = new Parser(input);
+
+        var result = parser.Equality() as BinaryExpression;
+        Assert.AreEqual(result.Operator, expectedOutput.Operator);
+        
+        var actualLeftExpression = result.LeftExpression as LiteralExpression;
+        var expectedLeftExpression = expectedOutput.LeftExpression as LiteralExpression;
+        Assert.AreEqual(actualLeftExpression.Literal, expectedLeftExpression.Literal);
+        
+        var actualRightExpression = result.RightExpression as LiteralExpression;
+        var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
+        Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
+    }
 }

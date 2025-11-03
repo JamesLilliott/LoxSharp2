@@ -12,6 +12,25 @@ public class Parser
         _tokens = tokens;
     }
     
+    public Expression Equality()
+    {
+        var expression = Comparison();
+        if (_tokens.Count < _index + 1)
+        {
+            return expression;
+        }
+
+        var token = _tokens[_index];
+        if (token.Type == TokenType.Equal || token.Type == TokenType.BangEqual)
+        {
+            var @operator = Consume(token).Type;
+            var rightExpression = Comparison();
+            expression = new BinaryExpression(expression, @operator, rightExpression);
+        }
+        
+        return expression;    
+    }
+
     public Expression Comparison()
     {
         var expression = Term();
@@ -31,7 +50,7 @@ public class Parser
         
         return expression;
     }
-    
+
     public Expression Term()
     {
         var expression = Factor();
