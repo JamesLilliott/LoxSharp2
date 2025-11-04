@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Parser\Parser.csproj" />
+      <ProjectReference Include="..\LoxCore\LoxCore.csproj" />
     </ItemGroup>
 
 </Project>
