@@ -79,4 +79,33 @@ public class InterpreterTest
         
         Assert.AreEqual(result, expectedOutput);
     }
+    
+    [TestCase(5, TokenType.Minus, 3, 2)]
+    [TestCase(6, TokenType.Slash, 2, 3)]
+    [TestCase(2, TokenType.Asterisk, 2, 4)]
+    [TestCase(3, TokenType.Plus, 2, 5)]
+    [TestCase("Hello", TokenType.Plus, " World", "Hello World")]
+    [TestCase(1, TokenType.Greater, 2, false)]
+    [TestCase(2, TokenType.GreaterEqual, 3, false)]
+    [TestCase(3, TokenType.Less, 4, true)]
+    [TestCase(4, TokenType.LessEqual, 5, true)]
+    [TestCase(4, TokenType.EqualEqual, 4, true)]
+    [TestCase(4, TokenType.EqualEqual, 3, false)]
+    [TestCase(4, TokenType.EqualEqual, null, false)]
+    [TestCase(null, TokenType.EqualEqual, null, true)]
+    [TestCase(4, TokenType.BangEqual, 5, true)]
+    [TestCase(null, TokenType.BangEqual, 5, true)]
+    [TestCase(5, TokenType.BangEqual, 5, false)]
+    [TestCase(null, TokenType.BangEqual, null, false)]
+    [Test]
+    public void TestInterpreterHandlesLiteralBinary(object? left, TokenType @operator, object? right, object expectedOutput)
+    {
+        var leftExpression = new LiteralExpression(left);
+        var rightExpression = new LiteralExpression(right);
+        var input = new BinaryExpression(leftExpression, @operator, rightExpression);
+        
+        var result = new Interpreter().Evaluate(input);
+        
+        Assert.AreEqual(result, expectedOutput);
+    }
 }
