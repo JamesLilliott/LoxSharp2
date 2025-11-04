@@ -4,19 +4,51 @@ namespace LoxParser;
 
 public class Interpreter
 {
-    public Object Evaluate(IExpression expression)
+    public object Evaluate(IExpression expression)
     {
-        switch (expression)
+        return expression switch
         {
-            case LiteralExpression literal:
-                return HandleLiteral(literal);
-        }
-        
-        throw new NotImplementedException(expression.GetType().Name + " is not implemented");
+            LiteralExpression literal => HandleLiteral(literal),
+            GroupingExpression grouping => HandleGrouping(grouping),
+            UnaryExpression unary => HandleUnary(unary),
+            _ => throw new NotImplementedException(expression.GetType().Name + " is not implemented")
+        };
+    }
+
+    private object HandleUnary(UnaryExpression unary)
+    {
+        var right = Evaluate(unary.Expression);
+
+        return unary.Operator switch
+        {
+            TokenType.Bang => !IsTruthy(right),
+            TokenType.Minus => -Convert.ToDouble(right),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    private object HandleGrouping(GroupingExpression grouping)
+    {
+        return Evaluate(grouping.Expression);
     }
 
     private object HandleLiteral(LiteralExpression expression)
     {
         return expression.Literal;
+    }
+    
+    private bool IsTruthy(object? right)
+    {
+        if (right == null)
+        {
+            return false;
+        }
+
+        if (right is bool)
+        {
+            return (bool)right;
+        }
+        
+        return true;
     }
 }
