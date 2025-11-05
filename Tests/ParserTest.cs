@@ -100,6 +100,9 @@ public class ParserTest
         var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
         Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
     }
+    
+    // TODO: Refactor tests to all end in SemiColon & EOF Token
+    // TODO: Refactor tests to have parse output list of Statements
 
     [Test]
     public void TestParserReturnsExpression()
