@@ -15,9 +15,10 @@ public class ParserTest
         var expectedOutput = new LiteralExpression(expected);
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as LiteralExpression;
+        var resultExpression = result.Values.First() as ExpressionStatement;
+        var expression = resultExpression.Expression as LiteralExpression;
         
-        Assert.AreEqual(resultExpression.Literal, expectedOutput.Literal);
+        Assert.AreEqual(expression.Literal, expectedOutput.Literal);
     }
     
     [TestCase(TokenType.String, "Hello", "Hello")]
@@ -29,9 +30,10 @@ public class ParserTest
         var expectedOutput = new LiteralExpression(expected);
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as LiteralExpression;
+        var resultExpression = result.Values.First() as ExpressionStatement;
+        var expression = resultExpression.Expression as LiteralExpression;
         
-        Assert.AreEqual(resultExpression.Literal, expectedOutput.Literal);
+        Assert.AreEqual(expression.Literal, expectedOutput.Literal);
     }
     
     [Test]
@@ -42,9 +44,10 @@ public class ParserTest
         var expectedOutput = new GroupingExpression(new LiteralExpression(567));
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as GroupingExpression;
+        var resultExpression = result.Values.First() as ExpressionStatement;
+        var expression = resultExpression.Expression as GroupingExpression;
         
-        var actualExpression = resultExpression.Expression as LiteralExpression;
+        var actualExpression = expression.Expression as LiteralExpression;
         var expectedExpression = expectedOutput.Expression as LiteralExpression;
         Assert.AreEqual(actualExpression.Literal, expectedExpression.Literal);
     }
@@ -70,11 +73,12 @@ public class ParserTest
         var expectedOutput = new UnaryExpression(TokenType.Minus, new LiteralExpression(567));
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as UnaryExpression;
+        var resultExpression = result.Values.First() as ExpressionStatement;
+        var expression = resultExpression.Expression as UnaryExpression;
         
-        Assert.AreEqual(resultExpression.Operator, expectedOutput.Operator);
-        var actualExpression = resultExpression.Expression as LiteralExpression;
-        var expectedExpression = expectedOutput.Expression as LiteralExpression;
+        Assert.AreEqual(expression.Operator, expectedOutput.Operator);
+        var actualExpression = expression.Expression as LiteralExpression;
+        var expectedExpression = expression.Expression as LiteralExpression;
         Assert.AreEqual(actualExpression.Literal, expectedExpression.Literal);
     }
     
@@ -95,15 +99,16 @@ public class ParserTest
         var expectedOutput = new BinaryExpression(new LiteralExpression(leftNumber), @operator, new LiteralExpression(rightNumber));
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as BinaryExpression;
+        var resultStatement = result.Values.First() as ExpressionStatement;
+        var expression = resultStatement.Expression as BinaryExpression;
 
-        Assert.AreEqual(resultExpression.Operator, expectedOutput.Operator);
+        Assert.AreEqual(expression.Operator, expectedOutput.Operator);
         
-        var actualLeftExpression = resultExpression.LeftExpression as LiteralExpression;
+        var actualLeftExpression = expression.LeftExpression as LiteralExpression;
         var expectedLeftExpression = expectedOutput.LeftExpression as LiteralExpression;
         Assert.AreEqual(actualLeftExpression.Literal, expectedLeftExpression.Literal);
         
-        var actualRightExpression = resultExpression.RightExpression as LiteralExpression;
+        var actualRightExpression = expression.RightExpression as LiteralExpression;
         var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
         Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
     }
@@ -191,9 +196,10 @@ public class ParserTest
         var parser = new Parser();
 
         var result = parser.Parse(input);
-        var resultExpression = result.Values.First() as BinaryExpression;
+        var resultExpression = result.Values.First() as ExpressionStatement;
+        var expression = resultExpression.Expression as BinaryExpression;
         
-        Assert.AreEqual(resultExpression.Operator, expectedOutput.Operator);
+        Assert.AreEqual(expression.Operator, expectedOutput.Operator);
         
         // TODO: Test/Assert Left and Right of the expression 
     }

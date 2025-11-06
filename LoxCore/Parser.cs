@@ -16,25 +16,37 @@ public class Parser
         _tokens = tokens;
     }
 
-    public DataResult<IExpression> Parse(List<Token> tokens)
+    public DataResult<IStatement> Parse(List<Token> tokens)
     {
-        var expressions = new List<IExpression>();
+        var expressions = new List<IStatement>();
         _tokens = tokens;
 
-        expressions.Add(Expression());
-
-        if (_tokens.Count < _index + 1 || _tokens[_index].Type != TokenType.SemiColon)
+        var statementResult = StatementExpression();
+        if (statementResult.Failed)
         {
-            return new DataResult<IExpression>(false, "Statement must end in `;`");    
+            return statementResult;
         }
-        _index++;
+
+        expressions.Add(statementResult.Values.First());
 
         if (_tokens.Count < _index + 1 || _tokens[_index].Type != TokenType.Eof)
         {
-            return new DataResult<IExpression>(false, "`EOF` Missing");    
+            return new DataResult<IStatement>(false, "`EOF` Missing");    
         }
         
-        return new DataResult<IExpression>(true, expressions);
+        return new DataResult<IStatement>(true, expressions);
+    }
+    
+    public DataResult<IStatement> StatementExpression()
+    { 
+        // TODO: The amount of excess and new instances in this function is :vomit:
+        var expression = Expression();
+        if (_tokens.Count < _index + 1 || Consume(_tokens[_index]).Type != TokenType.SemiColon)
+        {
+            return new DataResult<IStatement>(false, "Statement must end in `;`");    
+        }
+        
+        return new DataResult<IStatement>(true, new List<IStatement>() { new ExpressionStatement(expression) });
     }
 
     public IExpression Expression()
