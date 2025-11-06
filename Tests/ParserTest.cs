@@ -55,13 +55,16 @@ public class ParserTest
     [Test]
     public void TestParserReturnsBangUnary()
     {
-        var input = new List<Token> { new Token(TokenType.Bang), new Token(TokenType.True) };
+        var input = new List<Token> { new Token(TokenType.Bang), new Token(TokenType.True), new Token(TokenType.SemiColon), new Token(TokenType.Eof) };
         var expectedOutput = new UnaryExpression(TokenType.Bang, new LiteralExpression(true));
         
-        var parser = new Parser(input);
-        var result = parser.Unary() as UnaryExpression;
-        Assert.AreEqual(result.Operator, expectedOutput.Operator);
-        var actualExpression = result.Expression as LiteralExpression;
+        var result = new Parser().Parse(input);
+        var resultExpression = result.Value.First() as ExpressionStatement;
+        var expression = resultExpression.Expression as UnaryExpression;
+        
+        //var result = parser.Unary() as UnaryExpression;
+        Assert.AreEqual(expression.Operator, expectedOutput.Operator);
+        var actualExpression = expression.Expression as LiteralExpression;
         var expectedExpression = expectedOutput.Expression as LiteralExpression;
         Assert.AreEqual(actualExpression.Literal, expectedExpression.Literal);
     }

@@ -7,41 +7,35 @@ public class Parser
     private List<Token> _tokens;
     private int _index;
 
-    public Parser()
-    {
-    }
-
-    public Parser(List<Token> tokens)
-    {
-        _tokens = tokens;
-    }
-
     public DataResult<List<IStatement>> Parse(List<Token> tokens)
     {
-        var expressions = new List<IStatement>();
+        var statements = new List<IStatement>();
         _tokens = tokens;
+        _index = 0;
 
-        var statementResult = StatementExpression();
-        if (statementResult.Failed)
+        while (_tokens.Count >= _index + 1 && _tokens[_index].Type != TokenType.Eof)
         {
-            return new DataResult<List<IStatement>>(false, statementResult.ErrorMessage);
+            var statementResult = StatementExpression();
+            if (statementResult.Failed)
+            {
+                return new DataResult<List<IStatement>>(false, statementResult.ErrorMessage);
+            }
+
+            statements.Add(statementResult.Value);
         }
-
-        expressions.Add(statementResult.Value);
-
-        if (_tokens.Count < _index + 1 || _tokens[_index].Type != TokenType.Eof)
+        
+        if (!PopToken(out var lastToken) || lastToken.Type != TokenType.Eof)
         {
             return new DataResult<List<IStatement>>(false, "`EOF` Missing");    
         }
         
-        return new DataResult<List<IStatement>>(true, expressions);
+        return new DataResult<List<IStatement>>(true, statements);
     }
     
     public DataResult<IStatement> StatementExpression()
     { 
-        // TODO: The amount of excess and new instances in this function is :vomit:
         var expression = Expression();
-        if (_tokens.Count < _index + 1 || Consume(_tokens[_index]).Type != TokenType.SemiColon)
+        if (!PopToken(out var nextToken) || nextToken.Type != TokenType.SemiColon)
         {
             return new DataResult<IStatement>(false, "Statement must end in `;`");    
         }
@@ -49,12 +43,12 @@ public class Parser
         return new DataResult<IStatement>(true, new ExpressionStatement(expression));
     }
 
-    public IExpression Expression()
+    private IExpression Expression()
     {
         return Equality();
     }
 
-    public IExpression Equality()
+    private IExpression Equality()
     {
         var expression = Comparison();
         if (_tokens.Count < _index + 1)
@@ -73,7 +67,7 @@ public class Parser
         return expression;    
     }
 
-    public IExpression Comparison()
+    private IExpression Comparison()
     {
         var expression = Term();
         if (_tokens.Count < _index + 1)
@@ -93,7 +87,7 @@ public class Parser
         return expression;
     }
 
-    public IExpression Term()
+    private IExpression Term()
     {
         var expression = Factor();
         if (_tokens.Count < _index + 1)
@@ -112,7 +106,7 @@ public class Parser
         return expression;
     }
 
-    public IExpression Factor()
+    private IExpression Factor()
     {
         var expression = Unary();
         if (_tokens.Count < _index + 1)
@@ -131,7 +125,7 @@ public class Parser
         return expression;
     }
 
-    public IExpression Unary()
+    private IExpression Unary()
     {
         var token = _tokens[_index]; 
         if (token.Type == TokenType.Minus || token.Type == TokenType.Bang)
@@ -142,7 +136,7 @@ public class Parser
         return Primary();
     }
 
-    public IExpression Primary()
+    private IExpression Primary()
     {
         var token = Consume(_tokens[_index]);
 
@@ -173,5 +167,18 @@ public class Parser
     {
         _index++;
         return token;
+    }
+
+    private bool PopToken(out Token? token)
+    {
+        token = null;
+        if (_tokens.Count < _index + 1)
+        {
+            return false;
+        }
+
+        token =  _tokens[_index];
+        _index++;
+        return true;
     }
 }
