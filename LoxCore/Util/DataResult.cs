@@ -5,14 +5,14 @@ public class DataResult<T>
     private readonly bool _success;
 
     public bool Failed => !_success;
-    public List<T> Values { get; }
+    public T Value { get; }
 
     public string ErrorMessage { get; set; } = string.Empty;
 
-    public DataResult(bool success, List<T> valueses)
+    public DataResult(bool success, T value)
     {
         _success = success;
-        Values = valueses;
+        Value = value;
     }
 
     public DataResult(bool success, string errorMessage)

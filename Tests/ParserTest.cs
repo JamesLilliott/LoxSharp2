@@ -15,7 +15,7 @@ public class ParserTest
         var expectedOutput = new LiteralExpression(expected);
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as ExpressionStatement;
+        var resultExpression = result.Value.First() as ExpressionStatement;
         var expression = resultExpression.Expression as LiteralExpression;
         
         Assert.AreEqual(expression.Literal, expectedOutput.Literal);
@@ -30,7 +30,7 @@ public class ParserTest
         var expectedOutput = new LiteralExpression(expected);
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as ExpressionStatement;
+        var resultExpression = result.Value.First() as ExpressionStatement;
         var expression = resultExpression.Expression as LiteralExpression;
         
         Assert.AreEqual(expression.Literal, expectedOutput.Literal);
@@ -44,7 +44,7 @@ public class ParserTest
         var expectedOutput = new GroupingExpression(new LiteralExpression(567));
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as ExpressionStatement;
+        var resultExpression = result.Value.First() as ExpressionStatement;
         var expression = resultExpression.Expression as GroupingExpression;
         
         var actualExpression = expression.Expression as LiteralExpression;
@@ -73,7 +73,7 @@ public class ParserTest
         var expectedOutput = new UnaryExpression(TokenType.Minus, new LiteralExpression(567));
         
         var result = new Parser().Parse(input);
-        var resultExpression = result.Values.First() as ExpressionStatement;
+        var resultExpression = result.Value.First() as ExpressionStatement;
         var expression = resultExpression.Expression as UnaryExpression;
         
         Assert.AreEqual(expression.Operator, expectedOutput.Operator);
@@ -99,7 +99,7 @@ public class ParserTest
         var expectedOutput = new BinaryExpression(new LiteralExpression(leftNumber), @operator, new LiteralExpression(rightNumber));
         
         var result = new Parser().Parse(input);
-        var resultStatement = result.Values.First() as ExpressionStatement;
+        var resultStatement = result.Value.First() as ExpressionStatement;
         var expression = resultStatement.Expression as BinaryExpression;
 
         Assert.AreEqual(expression.Operator, expectedOutput.Operator);
@@ -196,7 +196,7 @@ public class ParserTest
         var parser = new Parser();
 
         var result = parser.Parse(input);
-        var resultExpression = result.Values.First() as ExpressionStatement;
+        var resultExpression = result.Value.First() as ExpressionStatement;
         var expression = resultExpression.Expression as BinaryExpression;
         
         Assert.AreEqual(expression.Operator, expectedOutput.Operator);

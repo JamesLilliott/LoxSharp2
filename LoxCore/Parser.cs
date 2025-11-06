@@ -16,7 +16,7 @@ public class Parser
         _tokens = tokens;
     }
 
-    public DataResult<IStatement> Parse(List<Token> tokens)
+    public DataResult<List<IStatement>> Parse(List<Token> tokens)
     {
         var expressions = new List<IStatement>();
         _tokens = tokens;
@@ -24,17 +24,17 @@ public class Parser
         var statementResult = StatementExpression();
         if (statementResult.Failed)
         {
-            return statementResult;
+            return new DataResult<List<IStatement>>(false, statementResult.ErrorMessage);
         }
 
-        expressions.Add(statementResult.Values.First());
+        expressions.Add(statementResult.Value);
 
         if (_tokens.Count < _index + 1 || _tokens[_index].Type != TokenType.Eof)
         {
-            return new DataResult<IStatement>(false, "`EOF` Missing");    
+            return new DataResult<List<IStatement>>(false, "`EOF` Missing");    
         }
         
-        return new DataResult<IStatement>(true, expressions);
+        return new DataResult<List<IStatement>>(true, expressions);
     }
     
     public DataResult<IStatement> StatementExpression()
@@ -46,7 +46,7 @@ public class Parser
             return new DataResult<IStatement>(false, "Statement must end in `;`");    
         }
         
-        return new DataResult<IStatement>(true, new List<IStatement>() { new ExpressionStatement(expression) });
+        return new DataResult<IStatement>(true, new ExpressionStatement(expression));
     }
 
     public IExpression Expression()
