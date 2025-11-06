@@ -11,12 +11,13 @@ public class ParserTest
     [Test]
     public void TestParserReturnsLiteral(TokenType tokenType, object? expected)
     {
-        var input = new List<Token> { new Token(tokenType) };
+        var input = new List<Token> { new Token(tokenType), new Token(TokenType.SemiColon), new Token(TokenType.Eof) };
         var expectedOutput = new LiteralExpression(expected);
         
-        var result = new Parser().Parse(input) as LiteralExpression;
+        var result = new Parser().Parse(input);
+        var resultExpression = result.Values.First() as LiteralExpression;
         
-        Assert.AreEqual(result.Literal, expectedOutput.Literal);
+        Assert.AreEqual(resultExpression.Literal, expectedOutput.Literal);
     }
     
     [TestCase(TokenType.String, "Hello", "Hello")]
@@ -24,24 +25,26 @@ public class ParserTest
     [Test]
     public void TestParserReturnsLiteralValue(TokenType tokenType, object value, object expected)
     {
-        var input = new List<Token> { new Token(tokenType, value) };
+        var input = new List<Token> { new Token(tokenType, value), new Token(TokenType.SemiColon), new Token(TokenType.Eof) };
         var expectedOutput = new LiteralExpression(expected);
         
-        var result = new Parser().Parse(input) as LiteralExpression;
+        var result = new Parser().Parse(input);
+        var resultExpression = result.Values.First() as LiteralExpression;
         
-        Assert.AreEqual(result.Literal, expectedOutput.Literal);
+        Assert.AreEqual(resultExpression.Literal, expectedOutput.Literal);
     }
     
     [Test]
     public void TestParserReturnsGrouping()
     {
-        var input = new List<Token> { new Token(TokenType.LeftParen), new Token(TokenType.Number, 567), new Token(TokenType.RightParen) };
+        var input = new List<Token> { new Token(TokenType.LeftParen), new Token(TokenType.Number, 567), new Token(TokenType.RightParen), new Token(TokenType.SemiColon), new Token(TokenType.Eof) };
         
         var expectedOutput = new GroupingExpression(new LiteralExpression(567));
         
-        var result = new Parser().Parse(input) as GroupingExpression;
+        var result = new Parser().Parse(input);
+        var resultExpression = result.Values.First() as GroupingExpression;
         
-        var actualExpression = result.Expression as LiteralExpression;
+        var actualExpression = resultExpression.Expression as LiteralExpression;
         var expectedExpression = expectedOutput.Expression as LiteralExpression;
         Assert.AreEqual(actualExpression.Literal, expectedExpression.Literal);
     }
@@ -63,12 +66,14 @@ public class ParserTest
     [Test]
     public void TestParserReturnsMinusUnary()
     {
-        var input = new List<Token> { new Token(TokenType.Minus), new Token(TokenType.Number, 567) };
+        var input = new List<Token> { new Token(TokenType.Minus), new Token(TokenType.Number, 567), new Token(TokenType.SemiColon), new Token(TokenType.Eof) };
         var expectedOutput = new UnaryExpression(TokenType.Minus, new LiteralExpression(567));
         
-        var result = new Parser().Parse(input) as UnaryExpression;
-        Assert.AreEqual(result.Operator, expectedOutput.Operator);
-        var actualExpression = result.Expression as LiteralExpression;
+        var result = new Parser().Parse(input);
+        var resultExpression = result.Values.First() as UnaryExpression;
+        
+        Assert.AreEqual(resultExpression.Operator, expectedOutput.Operator);
+        var actualExpression = resultExpression.Expression as LiteralExpression;
         var expectedExpression = expectedOutput.Expression as LiteralExpression;
         Assert.AreEqual(actualExpression.Literal, expectedExpression.Literal);
     }
@@ -86,22 +91,45 @@ public class ParserTest
     [Test]
     public void TestParserReturnsBinary(int leftNumber, TokenType @operator, int rightNumber)
     {
-        var input = new List<Token> { new Token(TokenType.Number, leftNumber), new Token(@operator), new Token(TokenType.Number, rightNumber) };
+        var input = new List<Token> { new Token(TokenType.Number, leftNumber), new Token(@operator), new Token(TokenType.Number, rightNumber), new Token(TokenType.SemiColon), new Token(TokenType.Eof) };
         var expectedOutput = new BinaryExpression(new LiteralExpression(leftNumber), @operator, new LiteralExpression(rightNumber));
         
-        var result = new Parser().Parse(input) as BinaryExpression;
-        Assert.AreEqual(result.Operator, expectedOutput.Operator);
+        var result = new Parser().Parse(input);
+        var resultExpression = result.Values.First() as BinaryExpression;
+
+        Assert.AreEqual(resultExpression.Operator, expectedOutput.Operator);
         
-        var actualLeftExpression = result.LeftExpression as LiteralExpression;
+        var actualLeftExpression = resultExpression.LeftExpression as LiteralExpression;
         var expectedLeftExpression = expectedOutput.LeftExpression as LiteralExpression;
         Assert.AreEqual(actualLeftExpression.Literal, expectedLeftExpression.Literal);
         
-        var actualRightExpression = result.RightExpression as LiteralExpression;
+        var actualRightExpression = resultExpression.RightExpression as LiteralExpression;
         var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
         Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
     }
+
+    [Test]
+    public void TestParserReturnsErrorWithoutSemicolon()
+    {
+        var input = new List<Token> { new Token(TokenType.Number, 22) };
+
+        var result = new Parser().Parse(input);
+        
+        Assert.AreEqual(true, result.Failed);
+        Assert.AreEqual("Statement must end in `;`", result.ErrorMessage);
+    }
     
-    // TODO: Refactor tests to all end in SemiColon & EOF Token
+    [Test]
+    public void TestParserReturnsErrorWithoutEndOfFile()
+    {
+        var input = new List<Token> { new Token(TokenType.Number, 22), new Token(TokenType.SemiColon) };
+
+        var result = new Parser().Parse(input);
+        
+        Assert.AreEqual(true, result.Failed);
+        Assert.AreEqual("`EOF` Missing", result.ErrorMessage);
+    }
+
     // TODO: Refactor tests to have parse output list of Statements
 
     [Test]
@@ -126,6 +154,8 @@ public class ParserTest
             new Token(TokenType.Number, 5),
             new Token(TokenType.Minus),
             new Token(TokenType.Number, 3),
+            new Token(TokenType.SemiColon),
+            new Token(TokenType.Eof)
         };
 
         var expectedOutput = 
@@ -160,9 +190,10 @@ public class ParserTest
         
         var parser = new Parser();
 
-        var result = parser.Parse(input) as BinaryExpression;
+        var result = parser.Parse(input);
+        var resultExpression = result.Values.First() as BinaryExpression;
         
-        Assert.AreEqual(result.Operator, expectedOutput.Operator);
+        Assert.AreEqual(resultExpression.Operator, expectedOutput.Operator);
         
         // TODO: Test/Assert Left and Right of the expression 
     }

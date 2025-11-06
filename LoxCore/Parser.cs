@@ -16,11 +16,25 @@ public class Parser
         _tokens = tokens;
     }
 
-    public IExpression Parse(List<Token> tokens)
+    public DataResult<IExpression> Parse(List<Token> tokens)
     {
+        var expressions = new List<IExpression>();
         _tokens = tokens;
 
-        return Expression();
+        expressions.Add(Expression());
+
+        if (_tokens.Count < _index + 1 || _tokens[_index].Type != TokenType.SemiColon)
+        {
+            return new DataResult<IExpression>(false, "Statement must end in `;`");    
+        }
+        _index++;
+
+        if (_tokens.Count < _index + 1 || _tokens[_index].Type != TokenType.Eof)
+        {
+            return new DataResult<IExpression>(false, "`EOF` Missing");    
+        }
+        
+        return new DataResult<IExpression>(true, expressions);
     }
 
     public IExpression Expression()

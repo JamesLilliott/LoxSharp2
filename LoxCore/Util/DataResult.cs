@@ -1,16 +1,23 @@
 ﻿namespace LoxParser;
 
-public class DataResult
+public class DataResult<T>
 {
-    private bool _success;
-    private List<Token> _tokens;
+    private readonly bool _success;
 
     public bool Failed => !_success;
-    public List<Token> Value => _tokens;
+    public List<T> Values { get; }
 
-    public DataResult(bool success, List<Token> tokens)
+    public string ErrorMessage { get; set; } = string.Empty;
+
+    public DataResult(bool success, List<T> valueses)
     {
         _success = success;
-        _tokens = tokens;
+        Values = valueses;
+    }
+
+    public DataResult(bool success, string errorMessage)
+    {
+        _success = success;
+        ErrorMessage = errorMessage;
     }
 }

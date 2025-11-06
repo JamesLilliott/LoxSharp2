@@ -2,7 +2,7 @@ using LoxParser;
 
 namespace Tests;
 
-public class Tests
+public class ScannerTest
 {
     private Scanner _scanner;
     [SetUp]
@@ -17,8 +17,8 @@ public class Tests
         var result = _scanner.Scan("");
         
         Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(result.Value.Count, 1);
-        Assert.AreEqual(TokenType.Eof, result.Value.First().Type);
+        Assert.AreEqual(result.Values.Count, 1);
+        Assert.AreEqual(TokenType.Eof, result.Values.First().Type);
     }
     
     [Test]
@@ -90,7 +90,7 @@ public class Tests
     {
         var result = _scanner.Scan(input);
         Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(result.Value.First().Type, output);
+        Assert.AreEqual(result.Values.First().Type, output);
     }
     
     [Test]
@@ -101,8 +101,8 @@ public class Tests
     {
         var result = _scanner.Scan(input);
         Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(result.Value.First().Type, output);
-        Assert.AreEqual(result.Value.First().Literal, expectedText);
+        Assert.AreEqual(result.Values.First().Type, output);
+        Assert.AreEqual(result.Values.First().Literal, expectedText);
     }
     
     [Test]
@@ -122,7 +122,7 @@ public class Tests
         Assert.That(result.Failed, Is.False);
         for (int i = 0; i < expectedTokens.Count; i++)
         {
-            Assert.AreEqual(expectedTokens[i].Type, result.Value[i].Type);
+            Assert.AreEqual(expectedTokens[i].Type, result.Values[i].Type);
         }
     }
     
@@ -175,11 +175,11 @@ public class Tests
         var result = _scanner.Scan("(){},.-+;/*===!=!>=><=<\"Test\"123IF OR AND FUN FOR NIL VAR ELSE THIS TRUE CLASS FALSE PRINT SUPER WHILE RETURN userName");
         
         Assert.That(result.Failed, Is.False);
-        Assert.AreEqual(expectedTokens.Length, result.Value.Count);
+        Assert.AreEqual(expectedTokens.Length, result.Values.Count);
 
         for (int i = 0; i < expectedTokens.Length; i++)
         {
-            Assert.AreEqual(expectedTokens[i].Type, result.Value[i].Type);
+            Assert.AreEqual(expectedTokens[i].Type, result.Values[i].Type);
         }
     }
 }

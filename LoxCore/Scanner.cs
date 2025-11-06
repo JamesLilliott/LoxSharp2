@@ -5,7 +5,7 @@ public class Scanner
     private string _source;
     private List<Token> _tokens;
     
-    public DataResult Scan(string source)
+    public DataResult<Token> Scan(string source)
     {
         _source = source;
         _tokens = new List<Token>();
@@ -13,7 +13,7 @@ public class Scanner
         if (string.IsNullOrEmpty(_source))
         {
             _tokens.Add(new Token(TokenType.Eof));
-            return new DataResult(true, _tokens);    
+            return new DataResult<Token>(true, _tokens);    
         }
 
         for (int i = 0; i < _source.Length; i++)
@@ -126,7 +126,7 @@ public class Scanner
                         }
                         else
                         {
-                            return new DataResult(false, _tokens);
+                            return new DataResult<Token>(false, _tokens);
                         }
                     }
                     continue;
@@ -190,11 +190,11 @@ public class Scanner
                 continue;
             }
             
-            return new DataResult(false, _tokens);
+            return new DataResult<Token>(false, _tokens);
         }
 
         _tokens.Add(new Token(TokenType.Eof));
-        return new DataResult(true, _tokens);
+        return new DataResult<Token>(true, _tokens);
     }
 
     private bool IsAlpha(char c)
