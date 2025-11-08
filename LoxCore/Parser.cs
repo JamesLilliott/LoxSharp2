@@ -15,7 +15,7 @@ public class Parser
 
         while (_tokens.Count >= _index + 1 && _tokens[_index].Type != TokenType.Eof)
         {
-            var statementResult = StatementExpression();
+            var statementResult = Statement();
             if (statementResult.Failed)
             {
                 return new DataResult<List<IStatement>>(false, statementResult.ErrorMessage);
@@ -32,7 +32,29 @@ public class Parser
         return new DataResult<List<IStatement>>(true, statements);
     }
     
-    public DataResult<IStatement> StatementExpression()
+    private DataResult<IStatement> Statement()
+    {
+        if (PeakToken(out var nextToken) && nextToken.Type == TokenType.Print)
+        {
+            _index++;
+            return PrintStatement();
+        }
+    
+        return StatementExpression();
+    }
+    
+    private DataResult<IStatement> PrintStatement()
+    { 
+        var expression = Expression();
+        if (!PopToken(out var nextToken) || nextToken.Type != TokenType.SemiColon)
+        {
+            return new DataResult<IStatement>(false, "Statement must end in `;`");    
+        }
+        
+        return new DataResult<IStatement>(true, new PrintStatement(expression));
+    }
+    
+    private DataResult<IStatement> StatementExpression()
     { 
         var expression = Expression();
         if (!PopToken(out var nextToken) || nextToken.Type != TokenType.SemiColon)
@@ -167,6 +189,18 @@ public class Parser
     {
         _index++;
         return token;
+    }
+
+    private bool PeakToken(out Token? token)
+    {
+        token = null;
+        if (_tokens.Count < _index + 1)
+        {
+            return false;
+        }
+
+        token =  _tokens[_index];
+        return true;
     }
 
     private bool PopToken(out Token? token)

@@ -115,6 +115,26 @@ public class ParserTest
         var expectedRightExpression = expectedOutput.RightExpression as LiteralExpression;
         Assert.AreEqual(actualRightExpression.Literal, expectedRightExpression.Literal);
     }
+    
+    [Test]
+    public void TestParserReturnsPrintStatement()
+    {
+        var input = new List<Token> { new Token(TokenType.Print), new Token(TokenType.String, "Hello World"), new Token(TokenType.SemiColon), new Token(TokenType.Eof) };
+        var expectedOutput = new PrintStatement(new LiteralExpression("Hello World"));
+        var expectedExpression = expectedOutput.Expression as LiteralExpression;
+        
+        var result = new Parser().Parse(input);
+        if (result.Failed)
+        {
+            Assert.Fail(result.ErrorMessage);
+        }
+
+        var resultStatement = result.Value.First() as PrintStatement;
+        var resultExpression = resultStatement.Expression as LiteralExpression;
+
+        Assert.IsTrue(resultStatement != null);
+        Assert.AreEqual(expectedExpression.Literal, resultExpression.Literal);
+    }
 
     [Test]
     public void TestParserReturnsErrorWithoutSemicolon()
